@@ -159,6 +159,9 @@ lista.addEventListener('click', (evento) => {
   // R6 · Marcar o desmarcar el episodio.
   vistos = alternarId(vistos, id);
 
+  // R6+ · Guardar los episodios vistos en LocalStorage.
+  guardarVistos(vistos);
+
   // R6 · Actualizar las tarjetas.
   render();
 });
