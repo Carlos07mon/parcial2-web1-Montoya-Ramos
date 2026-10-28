@@ -85,6 +85,12 @@ const render = () => {
   // R4 · Filtrar los episodios según la búsqueda y la temporada.
   const episodiosFiltrados = filtrarEpisodios(episodios, filtros);
 
+  // R5 · Contar los personajes de los episodios filtrados.
+  const totalPersonajes = contarPersonajes(episodiosFiltrados);
+
+  // R5 · Actualizar el contador de episodios y personajes.
+  contador.textContent = `${episodiosFiltrados.length} de ${episodios.length} episodios · ${totalPersonajes} personajes`;
+
   // R3 · Mostrar las tarjetas de los episodios.
   if (episodiosFiltrados.length === 0) {
     lista.innerHTML = `
@@ -98,8 +104,6 @@ const render = () => {
   const tarjetas = episodiosFiltrados.map(tarjetaHTML);
 
   lista.innerHTML = tarjetas.join('');
-
-  // TODO R5: actualizar el contador de episodios y personajes.
 };
 
 // R2 · Pide los episodios: muestra cargando; si todo sale bien guarda y pinta;
