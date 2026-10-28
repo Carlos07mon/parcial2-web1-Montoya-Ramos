@@ -17,7 +17,40 @@ const selectTemporada = document.querySelector('#filtro-temporada');
 
 // R3 · Recibe UN episodio y devuelve el HTML de su tarjeta (modelos 1 y 2 de index.html).
 const tarjetaHTML = (episodio) => {
-  // TODO
+  const estaVisto = vistos.includes(episodio.id);
+
+  return `
+    <article class="flex flex-col gap-2 rounded-2xl bg-white p-5 shadow ${estaVisto ? 'ring-2 ring-emerald-500' : ''}">
+
+      <span class="w-fit rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+        ${episodio.episode}
+      </span>
+
+      <h3 class="text-lg font-bold">
+        ${episodio.name}
+      </h3>
+
+      <p class="text-sm text-slate-500">
+        Emitido: ${episodio.air_date}
+      </p>
+
+      <p class="text-sm text-slate-500">
+        ${episodio.characters.length} personajes
+      </p>
+
+      <button
+        type="button"
+        data-id="${episodio.id}"
+        class="mt-auto rounded-lg py-2 font-semibold text-white ${estaVisto
+      ? 'bg-emerald-600 hover:bg-emerald-700'
+      : 'bg-indigo-600 hover:bg-indigo-700'
+    }"
+      >
+        ${estaVisto ? '✓ Visto' : 'Marcar como visto'}
+      </button>
+
+    </article>
+  `;
 };
 
 // R2 · Estado de carga y estado de error (modelos 3 y 4 de index.html).
@@ -33,8 +66,12 @@ const mostrarError = (mensaje) => {
   lista.innerHTML = `
     <div class="col-span-full rounded-2xl bg-rose-50 p-8 text-center text-rose-700">
       <p>No se pudieron cargar los episodios (${mensaje}).</p>
-      <button type="button" id="btn-reintentar"
-              class="mt-4 rounded-lg bg-rose-600 px-4 py-2 font-semibold text-white hover:bg-rose-700">
+
+      <button
+        type="button"
+        id="btn-reintentar"
+        class="mt-4 rounded-lg bg-rose-600 px-4 py-2 font-semibold text-white hover:bg-rose-700"
+      >
         Reintentar
       </button>
     </div>
@@ -44,7 +81,24 @@ const mostrarError = (mensaje) => {
 // R3 + R4 + R5 · ESTADO → pantalla: filtra, pinta las tarjetas (o el estado vacío, modelo 5)
 // y actualiza el contador con el formato «7 de 20 episodios · 187 personajes».
 const render = () => {
-  // TODO
+
+  // R3 · Mostrar las tarjetas de los episodios.
+  if (episodios.length === 0) {
+    lista.innerHTML = `
+      <p class="col-span-full rounded-2xl bg-white p-8 text-center text-slate-500">
+        Ningún episodio coincide con la búsqueda.
+      </p>
+    `;
+    return;
+  }
+
+  const tarjetas = episodios.map(tarjetaHTML);
+
+  lista.innerHTML = tarjetas.join('');
+
+  // TODO R4: aplicar los filtros de búsqueda y temporada.
+
+  // TODO R5: actualizar el contador de episodios y personajes.
 };
 
 // R2 · Pide los episodios: muestra cargando; si todo sale bien guarda y pinta;
@@ -54,7 +108,9 @@ const cargar = async () => {
 
   try {
     episodios = await obtenerEpisodios();
+
     render();
+
   } catch (error) {
     mostrarError(error.message);
   }
@@ -66,11 +122,13 @@ const cargar = async () => {
 // R6 · UN solo listener en #lista (delegación) que atienda el botón de cada tarjeta
 // y también el botón Reintentar.
 lista.addEventListener('click', (evento) => {
+
   if (evento.target.closest('#btn-reintentar')) {
     cargar();
   }
 
-  // TODO: completar los botones de las tarjetas en R6
+  // TODO R6: implementar los botones para marcar episodios vistos.
 });
 
+// Iniciar la aplicación.
 cargar();
