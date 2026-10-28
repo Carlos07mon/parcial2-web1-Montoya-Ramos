@@ -82,8 +82,11 @@ const mostrarError = (mensaje) => {
 // y actualiza el contador con el formato «7 de 20 episodios · 187 personajes».
 const render = () => {
 
+  // R4 · Filtrar los episodios según la búsqueda y la temporada.
+  const episodiosFiltrados = filtrarEpisodios(episodios, filtros);
+
   // R3 · Mostrar las tarjetas de los episodios.
-  if (episodios.length === 0) {
+  if (episodiosFiltrados.length === 0) {
     lista.innerHTML = `
       <p class="col-span-full rounded-2xl bg-white p-8 text-center text-slate-500">
         Ningún episodio coincide con la búsqueda.
@@ -92,11 +95,9 @@ const render = () => {
     return;
   }
 
-  const tarjetas = episodios.map(tarjetaHTML);
+  const tarjetas = episodiosFiltrados.map(tarjetaHTML);
 
   lista.innerHTML = tarjetas.join('');
-
-  // TODO R4: aplicar los filtros de búsqueda y temporada.
 
   // TODO R5: actualizar el contador de episodios y personajes.
 };
@@ -117,7 +118,19 @@ const cargar = async () => {
 };
 
 // R4 · Eventos del buscador (input), del select (change) y del formulario (Enter NO recarga).
-// TODO
+inputBusqueda.addEventListener('input', (evento) => {
+  filtros.texto = evento.target.value;
+  render();
+});
+
+selectTemporada.addEventListener('change', (evento) => {
+  filtros.temporada = evento.target.value;
+  render();
+});
+
+formFiltros.addEventListener('submit', (evento) => {
+  evento.preventDefault();
+});
 
 // R6 · UN solo listener en #lista (delegación) que atienda el botón de cada tarjeta
 // y también el botón Reintentar.
