@@ -140,11 +140,27 @@ formFiltros.addEventListener('submit', (evento) => {
 // y también el botón Reintentar.
 lista.addEventListener('click', (evento) => {
 
+  // R2 · Botón Reintentar.
   if (evento.target.closest('#btn-reintentar')) {
     cargar();
+    return;
   }
 
-  // TODO R6: implementar los botones para marcar episodios vistos.
+  // R6 · Identificar el botón del episodio.
+  const boton = evento.target.closest('[data-id]');
+
+  if (!boton) {
+    return;
+  }
+
+  // R6 · Obtener el identificador del episodio.
+  const id = Number(boton.dataset.id);
+
+  // R6 · Marcar o desmarcar el episodio.
+  vistos = alternarId(vistos, id);
+
+  // R6 · Actualizar las tarjetas.
+  render();
 });
 
 // Iniciar la aplicación.
